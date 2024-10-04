@@ -17,3 +17,11 @@ function jsonResponse($data){
     header("Content-Type:application/json");
     echo json_encode($data);
 }
+
+function htmlResponse($content){
+
+    $template = file_get_contents("html/template.html");
+    $html = str_replace("{content}",$content, $template);
+    echo $html;
+
+}

@@ -34,9 +34,24 @@ class Db{
             $data[] = $row;
         }
 
+        $con->close();
         return $data;
     }
 
+    public static function create($car){
+
+        $query = "INSERT INTO cars (brand, model, img) VALUES (? ,? ,?)";
+        $con = self::connect();
+
+        $stmt = $con->prepare($query);
+        $stmt->bind_param("sss",$car['brand'], $car['model'], $car['img']);
+        $stmt->execute();
+
+        $stmt->close();
+        $con->close();
+        return true;
+
+    }
 
 
 
