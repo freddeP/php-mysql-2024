@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client</title>
+</head>
+<body>
+    <h2>Client</h2>
+
+
+    <nav>
+        <a onclick = "getAdmin()" href="./admin">Admin</a>| 
+        <a onclick = "logOut()" href="./logout">Logout</a>
+    </nav>
+
+    <form onsubmit="login()" action="">
+
+        <input type="text" name="name" placeholder="Name">
+        <input type="submit" value="Login">
+
+    </form>
+
+    <div class="data">
+
+    </div>
+
+
+    <script>
+
+            async function getAdmin(){
+                window.event.preventDefault();
+                let response = await fetch("./admin",{
+                    method:"GET",
+                    credentials: 'include'
+                });
+                let data = await response.json();
+
+                if(data.error) return alert(data.error);
+
+                document.querySelector(".data").innerHTML = JSON.stringify(data); 
+
+            }
+
+            async function logOut(){
+                window.event.preventDefault();
+                let response = await fetch("./logout",{
+                    method:"GET",
+                    credentials: 'include'
+                });
+                let data = await response.json();
+
+                if(data.error) return alert(data.error);
+
+                document.querySelector(".data").innerHTML = JSON.stringify(data); 
+
+            }
+
+
+
+
+            async function login(){
+                window.event.preventDefault();
+                console.log(window.event.target);
+
+                let name = window.event.target.name.value;
+                let response = await fetch("./login/"+name);
+                let data = await response.json();
+
+
+                if(data.error) return alert(data.error);
+
+                document.querySelector(".data").innerHTML = "Welcome " +data.user  
+
+            }
+
+
+    </script>
+</body>
+</html>

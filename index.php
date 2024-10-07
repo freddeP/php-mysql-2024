@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 require_once("router_.php");
 require_once("helper.php");
 require_once("sql.php");
@@ -44,3 +44,48 @@ App::post("/cars/save", function(){
 
 
 });
+
+// Fake login to learn about sessions and client handling
+App::get('/login/$name', function($name){
+
+
+   $_SESSION["loggedIn"] = true;
+   $_SESSION['user']= $name;
+
+   jsonResponse(["user"=>$name, "loggedIn"=>true]);
+
+
+
+});
+App::get('/session', function(){
+
+   debug($_SESSION);
+
+});
+
+App::get('/client', function(){
+
+   include("client.html");
+
+});
+
+App::get('/admin', function(){
+
+   if(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']){
+
+      jsonResponse(["secret"=>"Company Password = 12345"]);
+      return;
+   }
+   jsonResponse(["error"=>"Forbidden data"]);
+
+});
+
+App::get('/logout', function(){
+
+   session_destroy();
+   jsonResponse(["loggedOut"=>true]);
+
+});
+
+
+
