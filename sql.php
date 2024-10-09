@@ -27,7 +27,10 @@ class Db{
         $con = self::connect();
 
         $query = "SELECT * FROM cars";
-        $result = $con->query($query);
+        $stmt = $con->prepare($query);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        //$result = $con->query($query);
         $data = [];
 
         while($row = $result->fetch_assoc()){
@@ -52,6 +55,45 @@ class Db{
         return true;
 
     }
+
+
+    public static function search($s){
+
+        
+        $con = self::connect();
+        
+        $arr = explode("%20", $s);
+        //debug($arr);
+
+        if(count($arr)>0){
+            $search = [];
+            foreach($arr as $x){
+                $search[]= '%'.$x.'%';
+            }
+        }
+ 
+        debug($search);
+        $query = "SELECT * FROM cars WHERE brand LIKE ?";
+
+        $stmt = $con->prepare($query);
+        $data = [];
+        foreach($search as $val){
+            $stmt->bind_param("s",$val);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            while($row = $result->fetch_assoc()){
+                $data[] = $row;
+            }
+            $result->free();
+        }
+   
+        $con->close();
+        
+        return $data;
+   
+
+    }
+
 
 
 
