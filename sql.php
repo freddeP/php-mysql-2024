@@ -62,7 +62,7 @@ class Db{
         
         $con = self::connect();
         
-        $arr = explode("%20", $s);
+        $arr = explode(" ", $s);
         //debug($arr);
 
         if(count($arr)>0){
@@ -72,23 +72,26 @@ class Db{
             }
         }
  
-        debug($search);
-        $query = "SELECT * FROM cars WHERE brand LIKE ?";
+        //debug($search);
+        $query = "SELECT * FROM cars WHERE brand LIKE ? OR model LIKE ?";
 
         $stmt = $con->prepare($query);
         $data = [];
         foreach($search as $val){
-            $stmt->bind_param("s",$val);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            while($row = $result->fetch_assoc()){
-                $data[] = $row;
+            //debug($val);
+            if($val != "%%"){
+                $stmt->bind_param("ss",$val, $val);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                while($row = $result->fetch_assoc()){
+                    $data[$row['id']] = $row;
+                }
+                $result->free();
             }
-            $result->free();
         }
    
         $con->close();
-        
+  
         return $data;
    
 
