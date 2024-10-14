@@ -1,15 +1,16 @@
 
-<form id = "uForm" action="./upload" enctype="multipart/form-data" method="post">
+<form id = "uForm" action="../upload/multi" enctype="multipart/form-data" method="post">
 
     <input type="text" name="owner" placeholder="Photographer">
-    <input type="file" name="img" id="">
+    <input type="file" name="img[]" id="" multiple>
+
     <input type="submit" value="Save">
 
 </form>
 
 <script>
 
-    document.querySelector("#uForm").addEventListener("submit", uploadFile);
+    //document.querySelector("#uForm").addEventListener("submit", uploadFile);
 
     async function uploadFile(event){
 

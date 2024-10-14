@@ -14,6 +14,36 @@ App::get("/upload", function(){
 
 });
 
+App::get("/upload/multi", function(){
+
+   $form = file_get_contents("html/multiUpload.html");
+   htmlResponse($form);
+
+});
+
+App::POST("/upload/multi", function(){
+
+/*    debug($_POST);
+   debug($_FILES); */
+
+   foreach($_FILES['img']['tmp_name'] as $key=>$val){
+
+      echo $key;
+      debug($_FILES['img']['tmp_name'][$key]);
+      debug($_FILES['img']['name'][$key]);
+
+      $tmp_name = $_FILES['img']['tmp_name'][$key];
+      $name = "multi/".$_FILES['img']['name'][$key];
+
+      move_uploaded_file($tmp_name, $name);
+
+
+
+   }
+
+
+});
+
 App::post("/upload", function(){
 
    $name = "file_".uniqid(true);
@@ -32,6 +62,9 @@ App::post("/upload", function(){
    $name = $name . "." . $ext;
    move_uploaded_file($_FILES['img']['tmp_name'], "uploads/$name");
 
+
+   echo "File uploaded";
+   debug($_POST);
 
 });
 
